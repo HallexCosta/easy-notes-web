@@ -1,0 +1,132 @@
+nav {
+  background: #f4f4f5;
+}
+
+.separator {
+  background: #f0f0f0f0; 
+  width: 100%;
+  height: 1px;
+  opacity: .8;
+}
+
+.button-selected {
+  color: #0753B7;
+}
+
+.container {
+  display: grid;
+
+  grid-template-columns: 69px 30vw calc(100vw - 30vw - 70px);
+  grid-template-rows: 10vh 90vh; 
+
+  grid-template-areas: 
+    'menu notes contentHeader'
+    'menu notes contentBody';
+}
+
+.container > nav {
+  grid-area: menu;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.container nav > img { 
+  width: 24px;
+  height: 24px; 
+  margin-bottom: 12px;
+}
+
+.container nav div {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+
+}
+.container > nav div button:first-child {
+  margin-top: 12px;
+}
+.container nav div > button {
+  border: 0;
+  background: #f4f4f5;
+}
+.container nav div button > img {
+  width: 24px;
+  height: 24px;
+}
+
+.notes-container::-webkit-scrollbar {
+  display: none;
+}
+
+.notes-container {
+  grid-area: notes;
+
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  row-gap: 15px;
+  padding: 10px;
+}
+
+/* note-card */
+.note-card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.note-card-container header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+}
+
+.note-card-container header > h3 {
+  font-family: Ubuntu;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 28px;
+}
+.note-card-container header > label {
+  font-family: Ubuntu;
+  font-weight: 500;
+}
+
+.note-card-container > p {
+  color: #a8a9a9;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.container .note-detail > nav  {
+  grid-area: contentHeader;
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+
+  padding-left: 15px;
+  column-gap: 24px;
+}
+
+.container .note-detail .text-area {
+  grid-area: contentBody;
+
+  height: 90vh;
+  width: calc(100vw - 30vw - 70px);
+  padding: 12px;
+
+  overflow: auto;
+
+  font-family: Ubuntu;
+  font-weight: 500;
+  font-size: 20px;
+}
