@@ -9,10 +9,6 @@ nav {
   opacity: .8;
 }
 
-.button-selected {
-  color: #0753B7;
-}
-
 .container {
   display: grid;
 

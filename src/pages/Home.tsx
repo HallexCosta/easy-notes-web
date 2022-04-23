@@ -1,9 +1,12 @@
-import ViewListIcon from '../assets/icons/view-list-icon.svg'
-import StarIcon from '../assets/icons/star-icon.svg'
-import TrashIcon from '../assets/icons/trash-icon.svg'
-import AddIcon from '../assets/icons/add-icon.svg'
-import CirclePeopleIcon from '../assets/icons/circle-people-icon.svg'
-import SendIcon from '../assets/icons/send-icon.svg'
+import { useState } from 'react'
+
+import ViewListIcon from '../components/icons/viewListIcon'
+import DeleteNoteIcon from '../components/icons/deleteNoteIcon'
+import AddNoteIcon from '../components/icons/addNoteIcon'
+import FavoriteNoteIcon from '../components/icons/favoriteNoteIcon'
+
+import CirclePeopleIcon from '../components/icons/circlePeopleIcon'
+import SendIcon from '../components/icons/sendIcon'
 
 import '../assets/styles/home.css'
 
@@ -13,56 +16,80 @@ type NoteCardParams = {
   description: string
 }
 
+interface MenuButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  selected: boolean
+}
+
+type PrincipalMenuButton = {
+  name: string
+  selected: boolean
+  renderIcon: React.FC<MenuButton>
+}
+
 export default function Home() {
-  const principalMenuButtons = [
+  const [selectedButton, setSelelectedButton] = useState<string>()
+
+  const [principalMenuButtons, setPrincipalMenuButtons]  = useState<PrincipalMenuButton[]>([
     {
-      name: 'ViewListIcon',
-      MenuButton: () => (
-        <button>
-          <img src={ViewListIcon} />
+      name: 'ListNotes',
+      selected: true,
+      renderIcon: ({ selected, ...props }) => (
+        <button {...props} className={selected ? 'button-selected' : ''}>
+          <ViewListIcon
+            fill={selected ? '#0753B7' : ''}
+          />
         </button>
       ),
     },
     {
-      name: 'StarIcon',
-      MenuButton: () => (
-        <button>
-          <img src={StarIcon} />
+      name: 'FavoriteNote',
+      selected: false,
+      renderIcon: ({ selected, ...props }) => (
+        <button {...props} className={selected ? 'button-selected' : ''}>
+          <FavoriteNoteIcon
+            fill={selected ? '#0753B7' : ''}
+          />
         </button>
       ),
     },
     {
-      name: 'TrashIcon',
-      MenuButton: () => (
-        <button>
-          <img src={TrashIcon} />
+      name: 'DeleteNote',
+      selected: false,
+      renderIcon: ({ selected, ...props }) => (
+        <button {...props} className={selected ? 'button-selected' : ''}>
+          <DeleteNoteIcon
+            fill={selected ? '#0753B7' : ''}
+          />
         </button>
       ),
     },
     {
-      name: 'AddIcon',
-      MenuButton: () => (
-        <button>
-          <img src={AddIcon} />
+      name: 'AddNote',
+      selected: false,
+      renderIcon: ({ selected, ...props }) => (
+        <button {...props} className={selected ? 'selected' : ''}>
+          <AddNoteIcon
+            fill={selected ? '#0753B7' : ''}
+          />
         </button>
       ),
     }
-  ]
+  ])
 
   const noteDetailButton = [
     {
       name: 'Send',
-      Button: () => (
+      renderIcon: () => (
         <button>
-          <img src={SendIcon} />
+          <SendIcon />
         </button>
       )
     },
     {
-      name: 'Trash',
-      Button: () => (
+      name: 'DeleteNote',
+      renderIcon: () => (
         <button>
-          <img src={TrashIcon} />
+          <DeleteNoteIcon />
         </button>
       )
     }
@@ -82,16 +109,33 @@ export default function Home() {
     </div>
   )
 
+  function handleChangeButtonColor(buttonName: string) {
+    console.log('clicked', buttonName)
+    principalMenuButtons.map(menuButton => {
+      if (menuButton.name === buttonName) {
+        menuButton.selected = true
+        return menuButton
+      }
+
+      menuButton.selected = false
+      return menuButton
+    })
+    setSelelectedButton(buttonName)
+  }
+
   return (
       <div className="container">
         <nav>
           <div>
           {principalMenuButtons.map(
-              ({ name, MenuButton }) => <MenuButton key={name} />
+              ({ name, selected, renderIcon }) => renderIcon({
+                onClick: handleChangeButtonColor.bind(null, name),
+                selected
+              })
            )}
           </div>
 
-          <img src={CirclePeopleIcon} />
+          <CirclePeopleIcon />
         </nav>
 
         <section className="notes-container">
@@ -113,7 +157,7 @@ export default function Home() {
         <section className="note-detail">
           <nav>
             {noteDetailButton.map(
-              ({name, Button}) => <Button key={name} />
+              ({name, renderIcon}) => renderIcon()
             )}
           </nav>
 
