@@ -2,6 +2,10 @@ nav {
   background: #f4f4f5;
 }
 
+.note-card-selected {
+  background-color: rgba(164,207,222, .3);
+}
+
 .separator {
   background: #f0f0f0f0; 
   width: 100%;
@@ -64,8 +68,7 @@ nav {
   flex-direction: column;
   height: 100%;
 
-  row-gap: 15px;
-  padding: 10px;
+  row-gap: 8px;
 }
 
 /* note-card */
@@ -73,6 +76,9 @@ nav {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
+
+  padding: 8px 8px 8px 15px;
 }
 
 .note-card-container header {
@@ -90,16 +96,19 @@ nav {
   font-style: normal;
   font-size: 20px;
   line-height: 28px;
+  cursor: inherit;
 }
 .note-card-container header > label {
   font-family: Ubuntu;
   font-weight: 500;
+  cursor: inherit;
 }
 
 .note-card-container > p {
   color: #a8a9a9;
   font-size: 14px;
   font-weight: 400;
+  cursor: inherit;
 }
 
 .container .note-detail > nav  {
