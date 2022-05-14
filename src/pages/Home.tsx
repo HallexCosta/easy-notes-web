@@ -10,7 +10,8 @@ import SendIcon from '../components/icons/sendIcon'
 
 import '../assets/styles/home.css'
 
-type NoteCardParams = {
+type NoteCardParams = React.HTMLAttributes<HTMLDivElement> & {
+  position: number
   title: string
   date: string
   description: string
@@ -27,6 +28,7 @@ type PrincipalMenuButton = {
 }
 
 export default function Home() {
+  const [selectedCard, setSelelectedCard] = useState<number>(0)
   const [selectedButton, setSelelectedButton] = useState<string>()
 
   const [principalMenuButtons, setPrincipalMenuButtons]  = useState<PrincipalMenuButton[]>([
@@ -98,8 +100,16 @@ export default function Home() {
   const Separator = () => (
     <div className="separator" />
   )
+
   const NoteCard = (params: NoteCardParams) => (
-    <div className="note-card-container"> 
+    <div
+      onClick={params.onClick}
+      className={`note-card-container ${
+      /*select the card that was clicked*/
+      selectedCard === params.position
+      ? 'note-card-selected'
+      : ''}`}
+    > 
       <header>
         <h3>{params.title}</h3>
         <label>{params.date}</label>
@@ -123,16 +133,21 @@ export default function Home() {
     setSelelectedButton(buttonName)
   }
 
+  function handleChangeCardColor(cardId: number, event: any) {
+    console.log('select card', cardId, event)
+    setSelelectedCard(cardId)
+  }
+
   return (
       <div className="container">
         <nav>
           <div>
-          {principalMenuButtons.map(
+            {principalMenuButtons.map(
               ({ name, selected, renderIcon }) => renderIcon({
                 onClick: handleChangeButtonColor.bind(null, name),
                 selected
               })
-           )}
+            )}
           </div>
 
           <CirclePeopleIcon />
@@ -144,10 +159,12 @@ export default function Home() {
               index => 
                 <>
                   <NoteCard 
-                    key={index} 
+                    key={`card ${index}`} 
+                    position={Number(index)}
                     title="Some random idea"
                     date="now"
                     description="lorem ipsum is a decoreted a number string bolean and tibia yes."
+                    onClick={handleChangeCardColor.bind(null, index)}
                   />
                   <Separator key={index}/>
                 </>
