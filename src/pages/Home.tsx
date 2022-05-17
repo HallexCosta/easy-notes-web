@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+import requestCards, { NoteCardDomain } from '../resources/cardsStorageInMemory'
 
 import ViewListIcon from '../components/icons/viewListIcon'
 import DeleteNoteIcon from '../components/icons/deleteNoteIcon'
@@ -10,8 +12,13 @@ import SendIcon from '../components/icons/sendIcon'
 
 import '../assets/styles/home.css'
 
-type NoteCardParams = React.HTMLAttributes<HTMLDivElement> & {
+type NoteCardProps = React.HTMLAttributes<HTMLDivElement> & {
   position: number
+  title: string
+  date: string
+  description: string
+}
+type NoteCardDetailProps = React.HTMLAttributes<HTMLDivElement> & {
   title: string
   date: string
   description: string
@@ -28,9 +35,13 @@ type PrincipalMenuButton = {
 }
 
 export default function Home() {
-  const [selectedCard, setSelelectedCard] = useState<number>(0)
-  const [selectedButton, setSelelectedButton] = useState<string>()
+  const [cardsData, setCardsData] = useState<NoteCardDomain[]>([])
+  const [selectedCardData, setSelectedCardData] = useState<NoteCardDomain>()
 
+  const [selectedCard, setSelectedCard] = useState<number>(0)
+  const [selectedButton, setSelectedButton] = useState<string>()
+
+  const [noteDetailStatus, setNoteDetailStatus] = useState<string>('saved')
   const [principalMenuButtons, setPrincipalMenuButtons]  = useState<PrincipalMenuButton[]>([
     {
       name: 'ListNotes',
@@ -101,7 +112,7 @@ export default function Home() {
     <div className="separator" />
   )
 
-  const NoteCard = (params: NoteCardParams) => (
+  const NoteCard = (params: NoteCardProps) => (
     <div
       onClick={params.onClick}
       className={`note-card-container ${
@@ -119,6 +130,24 @@ export default function Home() {
     </div>
   )
 
+  const NoteCardDetail = (params: NoteCardDetailProps) => (
+    <div className="text-area">
+      <h2>{params.title}</h2>
+      <textarea
+        onChange={handleOnChangeNoteCardText}
+      >{params.description}</textarea>
+    </div>
+  )
+  
+
+  useEffect(() => {
+    const cards = requestCards()
+
+    setCardsData(cards)
+    setSelectedCard(0)
+    setSelectedCardData(cards[0])
+  }, [cardsData])
+
   function handleChangeButtonColor(buttonName: string) {
     console.log('clicked', buttonName)
     principalMenuButtons.map(menuButton => {
@@ -130,12 +159,16 @@ export default function Home() {
       menuButton.selected = false
       return menuButton
     })
-    setSelelectedButton(buttonName)
+    setSelectedButton(buttonName)
   }
 
-  function handleChangeCardColor(cardId: number, event: any) {
-    console.log('select card', cardId, event)
-    setSelelectedCard(cardId)
+  function handleChangeCardColor(noteCard: NoteCardDomain, positionCard: number, event: any) {
+    setSelectedCard(positionCard)
+    setSelectedCardData(noteCard)
+  }
+
+  function handleOnChangeNoteCardText() {
+    setNoteDetailStatus('editing')
   }
 
   return (
@@ -154,34 +187,41 @@ export default function Home() {
         </nav>
 
         <section className="notes-container">
-          {(Array.from(Array(10).keys())
-            .map(
-              index => 
-                <>
-                  <NoteCard 
-                    key={`card ${index}`} 
-                    position={Number(index)}
-                    title="Some random idea"
-                    date="now"
-                    description="lorem ipsum is a decoreted a number string bolean and tibia yes."
-                    onClick={handleChangeCardColor.bind(null, index)}
-                  />
-                  <Separator key={index}/>
-                </>
-            ))}
+          {cardsData.map(
+             (card, index)=> 
+              <>
+                <NoteCard 
+                  key={`card ${index}`} 
+                  position={Number(index)}
+                  title={card.title}
+                  date="now"
+                  description={card.description}
+                  onClick={e => handleChangeCardColor(card, index, e)}
+                />
+                <Separator key={index}/>
+              </>
+            )}
         </section>
 
         <section className="note-detail">
           <nav>
-            {noteDetailButton.map(
-              ({name, renderIcon}) => renderIcon()
-            )}
+            <div className="note-detail-buttons">
+              {noteDetailButton.map(
+                ({name, renderIcon}) => renderIcon()
+              )}
+            </div>
+
+            <label>{noteDetailStatus}</label>
+
           </nav>
 
-          <div
-            className="text-area"
-            contentEditable={true}
-          />
+          {selectedCardData && (
+            <NoteCardDetail
+              title={selectedCardData.title}
+              description={selectedCardData.description}
+              date="now"
+            />
+          )}
         </section>
       </div>
   )
