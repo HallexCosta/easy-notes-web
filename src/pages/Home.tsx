@@ -38,7 +38,7 @@ export default function Home() {
   const [cardsData, setCardsData] = useState<NoteCardDomain[]>([])
   const [selectedCardData, setSelectedCardData] = useState<NoteCardDomain>()
 
-  const [selectedCard, setSelectedCard] = useState<number>(0)
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number>(0)
   const [selectedButton, setSelectedButton] = useState<string>()
 
   const [noteDetailStatus, setNoteDetailStatus] = useState<string>('saved')
@@ -89,6 +89,18 @@ export default function Home() {
     }
   ])
 
+  function handleDeleteCard(cardIndex: number) {
+    // remove card deleted from React.state
+    setCardsData(currentCards => {
+      return currentCards.filter((_, index) => {
+        return cardIndex !== index
+      })
+    })
+
+    // change content from main when delete a card
+    const nextCardIndex = cardIndex + 1
+    setSelectedCardData(cardsData[nextCardIndex])
+  }
   const noteDetailButton = [
     {
       name: 'Send',
@@ -101,7 +113,7 @@ export default function Home() {
     {
       name: 'DeleteNote',
       renderIcon: () => (
-        <button>
+        <button onClick={handleDeleteCard.bind(null, selectedCardIndex)}>
           <DeleteNoteIcon />
         </button>
       )
@@ -117,7 +129,7 @@ export default function Home() {
       onClick={params.onClick}
       className={`note-card-container ${
       /*select the card that was clicked*/
-      selectedCard === params.position
+      selectedCardIndex === params.position
       ? 'note-card-selected'
       : ''}`}
     > 
@@ -144,9 +156,9 @@ export default function Home() {
     const cards = requestCards()
 
     setCardsData(cards)
-    setSelectedCard(0)
+    setSelectedCardIndex(0)
     setSelectedCardData(cards[0])
-  }, [cardsData])
+  }, [])
 
   function handleChangeButtonColor(buttonName: string) {
     console.log('clicked', buttonName)
@@ -163,7 +175,7 @@ export default function Home() {
   }
 
   function handleChangeCardColor(noteCard: NoteCardDomain, positionCard: number, event: any) {
-    setSelectedCard(positionCard)
+    setSelectedCardIndex(positionCard)
     setSelectedCardData(noteCard)
   }
 
