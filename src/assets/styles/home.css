@@ -13,6 +13,81 @@ nav {
   opacity: .8;
 }
 
+.modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.modal .modal-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  background-color: #efefef;
+  padding: 22px;
+  width: 50%;
+  height: 80%;
+  border-radius: 8px;
+}
+.modal .modal-content main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal .modal-content main label {
+  font-size: 18px;
+  font-weight: medium;
+  margin-bottom: 8px;
+}
+
+.modal .modal-content main input {
+  width: 100%;
+  height: 38px;
+  border-radius: 3px;
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  color: black;
+}
+
+.modal .modal-content main textarea {
+  height: 250px;
+  border-radius: 3px;
+  font-family: Roboto;
+  padding: 12px;
+  font-size: 18px;
+}
+
+.modal .modal-content footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+}
+
+.modal .modal-content footer button {
+  font-family: Roboto;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: white;
+  background-color: #0e0e0e;
+  padding: 12px;
+
+  border-radius: 8px;
+}
+
 .container {
   display: grid;
 
